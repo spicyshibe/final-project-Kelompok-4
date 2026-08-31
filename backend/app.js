@@ -4,6 +4,7 @@ const cors = require('cors');
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.listen(config.port, () => {
 
