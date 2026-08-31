@@ -9,6 +9,10 @@ function getMyOrders(req, res) {
   return sendResponse(res, { data: orderModel.findByUser(user_id) });
 }
 
+function getAllOrders(req, res) {
+  return sendResponse(res, { data: orderModel.findAll() });
+}
+
 function updateOrderStatus(req, res) {
   const { status } = req.body;
   const order = orderModel.updateStatus(req.params.id, status);
@@ -18,4 +22,4 @@ function updateOrderStatus(req, res) {
   return sendResponse(res, { message: 'Status pesanan diperbarui', data: order });
 }
 
-module.exports = { getMyOrders, updateOrderStatus };
+module.exports = { getMyOrders, getAllOrders, updateOrderStatus };

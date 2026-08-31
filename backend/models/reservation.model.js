@@ -1,6 +1,8 @@
 const db = require('../config/db');
 
 const STATUSES = ['menunggu', 'dikonfirmasi', 'dibatalkan'];
+// ponytail: jumlah meja restoran di-hardcode, ganti ke tabel `tables` kalau nanti butuh atur per-meja
+const MAX_MEJA_PER_SLOT = 5;
 
 function create({ user_id, tanggal, jam, jumlah_orang }) {
   const stmt = db.prepare(
@@ -28,7 +30,7 @@ function isSlotAvailable(tanggal, jam) {
       `SELECT COUNT(*) AS count FROM reservations WHERE tanggal = ? AND jam = ? AND status != 'dibatalkan'`
     )
     .get(tanggal, jam);
-  return row.count === 0;
+  return row.count < MAX_MEJA_PER_SLOT;
 }
 
 function updateStatus(id, status) {

@@ -24,6 +24,9 @@ export function useOrderTracking() {
 
   useEffect(() => {
     fetchOrders();
+    // near-real-time (FR-6.2): polling tiap 10 detik, bukan websocket - cukup buat status pesanan
+    const interval = setInterval(fetchOrders, 10000);
+    return () => clearInterval(interval);
   }, [fetchOrders]);
 
   return { orders, loading, error, refresh: fetchOrders };

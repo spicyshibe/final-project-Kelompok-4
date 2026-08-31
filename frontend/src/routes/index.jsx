@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Reservation from '../pages/Reservation';
 import OrderTracking from '../pages/OrderTracking';
+import AdminReservations from '../pages/AdminReservations';
+import AdminOrders from '../pages/AdminOrders';
 
 /**
  * Semua route halaman didaftarin di sini. App.jsx cuma manggil
@@ -14,6 +16,8 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/reservasi" element={<Reservation />} />
       <Route path="/pesanan" element={<OrderTracking />} />
+      <Route path="/admin/reservasi" element={<AdminReservations />} />
+      <Route path="/admin/pesanan" element={<AdminOrders />} />
     </Routes>
   );
 }
