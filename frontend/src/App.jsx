@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import CartDrawer from './components/CartDrawer';
+import ChatWidget from './components/ChatWidget';
 import AppRoutes from './routes';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             </main>
           </div>
           <CartDrawer />
+          <ChatWidget />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

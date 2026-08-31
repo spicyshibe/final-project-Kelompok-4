@@ -12,7 +12,7 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'secret_jwt_key_restoran_paw_kelompok_4_super_secure',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   dbPath: process.env.DB_PATH || './database/restaurant.db',
+  geminiApiKey: process.env.GEMINI_API_KEY,
 };
 
 module.exports = config;
-
