@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UtensilsCrossed, User, LogOut, ShieldCheck, UserCheck, Menu as MenuIcon, X } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { UtensilsCrossed, ShoppingBag, LogOut, ShieldCheck, Menu as MenuIcon, X } from 'lucide-react';
+
+const navLinks = [
+  { name: 'Beranda', path: '/' },
+  { name: 'Katalog Menu', path: '/menu' },
+  { name: 'Reservasi Meja', path: '/reservasi' },
+  { name: 'Lacak Pesanan', path: '/pesanan' },
+];
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { cart, toggleCart } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,33 +45,52 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            <Link
-              to="/"
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition ${
-                isActive('/') ? 'text-amber-600 bg-amber-50 font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              Beranda
-            </Link>
+          <div className="hidden md:flex items-center gap-1 bg-gray-50/80 p-1.5 rounded-full border border-gray-200/60">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition ${
+                  isActive(link.path)
+                    ? 'bg-white text-amber-600 shadow-sm font-semibold'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/60'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
 
             {isAdmin && (
               <Link
                 to="/admin/dashboard"
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition flex items-center gap-1.5 ${
                   isActive('/admin/dashboard')
-                    ? 'text-purple-700 bg-purple-50 font-semibold'
+                    ? 'bg-purple-50 text-purple-700 font-semibold'
                     : 'text-purple-600 hover:text-purple-800 hover:bg-purple-50/60'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4" />
-                Dashboard Admin
+                Admin
               </Link>
             )}
           </div>
 
-          {/* Desktop Auth Section */}
-          <div className="hidden md:flex items-center space-x-3">
+          {/* Desktop: cart + auth */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              type="button"
+              onClick={toggleCart}
+              className="relative p-2.5 rounded-xl bg-gray-100 hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-colors flex items-center justify-center cursor-pointer"
+              title="Buka Keranjang Belanja"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {cart?.total_items > 0 && (
+                <span className="absolute -top-1 -right-1 bg-orange-600 text-white font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-md">
+                  {cart.total_items}
+                </span>
+              )}
+            </button>
+
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 <Link
@@ -115,7 +143,20 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex md:hidden items-center">
+          <div className="flex md:hidden items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleCart}
+              className="relative p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              title="Buka Keranjang Belanja"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {cart?.total_items > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-orange-600 text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                  {cart.total_items}
+                </span>
+              )}
+            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -129,13 +170,16 @@ export default function Navbar() {
       {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 pt-3 pb-4 space-y-2">
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Beranda
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
+            >
+              {link.name}
+            </Link>
+          ))}
 
           {isAdmin && (
             <Link

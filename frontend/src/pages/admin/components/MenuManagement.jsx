@@ -17,7 +17,7 @@ export default function MenuManagement() {
     nama: '',
     deskripsi: '',
     harga: '',
-    kategori: 'makanan',
+    kategori: 'Makanan Utama',
     kalori: '',
     gambar: '',
     allergens: []
@@ -76,7 +76,7 @@ export default function MenuManagement() {
       nama: '',
       deskripsi: '',
       harga: '',
-      kategori: 'makanan',
+      kategori: 'Makanan Utama',
       kalori: '',
       gambar: '',
       allergens: []
@@ -218,7 +218,7 @@ export default function MenuManagement() {
       <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
         {/* Category Tabs */}
         <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-          {['semua', 'makanan', 'minuman', 'dessert', 'cemilan'].map((cat) => (
+          {['semua', 'Makanan Utama', 'Makanan Pembuka', 'Minuman', 'Dessert'].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -333,16 +333,16 @@ export default function MenuManagement() {
                       <button
                         onClick={() => handleToggleAvailability(menu.id)}
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase transition ${
-                          menu.is_available
+                          menu.status_tersedia
                             ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200/80'
                             : 'bg-red-100 text-red-800 hover:bg-red-200/80'
                         }`}
                         title="Klik untuk mengubah ketersediaan stok"
                       >
                         <span
-                          className={`w-2 h-2 rounded-full ${menu.is_available ? 'bg-emerald-500' : 'bg-red-500'}`}
+                          className={`w-2 h-2 rounded-full ${menu.status_tersedia ? 'bg-emerald-500' : 'bg-red-500'}`}
                         ></span>
-                        {menu.is_available ? 'Tersedia' : 'Habis'}
+                        {menu.status_tersedia ? 'Tersedia' : 'Habis'}
                       </button>
                     </td>
 
@@ -411,10 +411,10 @@ export default function MenuManagement() {
                     onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
                     className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition capitalize"
                   >
-                    <option value="makanan">Makanan</option>
-                    <option value="minuman">Minuman</option>
-                    <option value="dessert">Dessert</option>
-                    <option value="cemilan">Cemilan</option>
+                    <option value="Makanan Utama">Makanan Utama</option>
+                    <option value="Makanan Pembuka">Makanan Pembuka</option>
+                    <option value="Minuman">Minuman</option>
+                    <option value="Dessert">Dessert</option>
                   </select>
                 </div>
 

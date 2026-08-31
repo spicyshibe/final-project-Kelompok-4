@@ -6,6 +6,10 @@ import Register from '../pages/Register';
 import Profile from '../pages/Profile';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import ProtectedRoute from '../components/ProtectedRoute';
+import Reservation from '../pages/Reservation';
+import OrderTracking from '../pages/OrderTracking';
+import MenuCatalog from '../pages/MenuCatalog';
+import CartPage from '../pages/CartPage';
 
 /**
  * Pendaftaran route aplikasi
@@ -17,6 +21,11 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/menu" element={<MenuCatalog />} />
+      <Route path="/menu/:id" element={<MenuCatalog />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/reservasi" element={<Reservation />} />
+      <Route path="/pesanan" element={<OrderTracking />} />
 
       {/* Authenticated User Routes (Pelanggan / Admin) */}
       <Route
@@ -28,7 +37,7 @@ function AppRoutes() {
         }
       />
 
-      {/* Admin Only Routes (FR-1.2, FR-1.3) */}
+      {/* Admin Only Routes (FR-1.2, FR-1.3) - tabs: overview/menu/reservations/orders/users */}
       <Route
         path="/admin/dashboard"
         element={

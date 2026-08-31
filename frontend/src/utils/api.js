@@ -8,77 +8,97 @@ export function getAuthToken() {
 }
 
 /**
- * Helper dasar untuk request fetch dengan auto JSON parsing dan JWT token
+ * Wrapper dasar buat request fetch ke backend Express - auto JSON parsing,
+ * nempelin JWT token kalau ada, dan lempar Error kalau gagal.
  */
-async function request(path, options = {}) {
+export async function apiRequest(path, options = {}) {
+  const url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
   const token = getAuthToken();
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...options.headers,
-  };
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(url, {
     ...options,
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
   });
 
-  let data;
-  try {
-    data = await response.json();
-  } catch (err) {
-    data = null;
+  const json = await response.json().catch(() => ({
+    success: false,
+    message: `HTTP error ${response.status}`,
+  }));
+
+  if (!response.ok || json.success === false) {
+    const errorMsg = json.message || `Request gagal: ${response.status} ${response.statusText}`;
+    const err = new Error(errorMsg);
+    err.status = response.status;
+    err.data = json;
+    throw err;
   }
 
-  if (!response.ok) {
-    const errorMessage = data?.message || `Request gagal (${response.status}: ${response.statusText})`;
-    const error = new Error(errorMessage);
-    error.status = response.status;
-    error.data = data;
-    throw error;
-  }
-
-  return data;
+  return json;
 }
 
 /**
- * GET request
+ * GET request helper dengan query params builder
  */
-export async function apiGet(path) {
-  return request(path, { method: 'GET' });
+export async function apiGet(path, params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      query.append(key, value);
+    }
+  });
+
+  const queryString = query.toString();
+  const url = queryString ? `${path}?${queryString}` : path;
+
+  return apiRequest(url, { method: 'GET' });
 }
 
 /**
- * POST request
+ * POST request helper
  */
-export async function apiPost(path, body) {
-  return request(path, {
+export async function apiPost(path, body = {}) {
+  return apiRequest(path, {
     method: 'POST',
     body: JSON.stringify(body),
   });
 }
 
 /**
- * PUT request
+ * PUT request helper
  */
-export async function apiPut(path, body) {
-  return request(path, {
+export async function apiPut(path, body = {}) {
+  return apiRequest(path, {
     method: 'PUT',
     body: JSON.stringify(body),
   });
 }
 
 /**
- * DELETE request
+ * PATCH request helper
+ */
+export async function apiPatch(path, body = {}) {
+  return apiRequest(path, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+}
+
+/**
+ * DELETE request helper
  */
 export async function apiDelete(path) {
-  return request(path, { method: 'DELETE' });
+  return apiRequest(path, { method: 'DELETE' });
 }
 
 export default {
   get: apiGet,
   post: apiPost,
   put: apiPut,
+  patch: apiPatch,
   delete: apiDelete,
   getToken: getAuthToken,
 };

@@ -107,7 +107,7 @@ const AdminController = {
   async updateMenu(req, res) {
     try {
       const { id } = req.params;
-      const { nama, deskripsi, harga, kategori, kalori, gambar, allergens, is_available } = req.body;
+      const { nama, deskripsi, harga, kategori, kalori, gambar, allergens, status_tersedia } = req.body;
 
       const existingMenu = MenuModel.findById(id);
       if (!existingMenu) {
@@ -126,7 +126,7 @@ const AdminController = {
         kalori: kalori !== undefined ? Number(kalori) : undefined,
         gambar: gambar !== undefined ? gambar.trim() : undefined,
         allergens: allergens !== undefined ? allergens : undefined,
-        is_available: is_available !== undefined ? is_available : undefined
+        status_tersedia: status_tersedia !== undefined ? status_tersedia : undefined
       });
 
       return sendResponse(res, {
@@ -165,7 +165,7 @@ const AdminController = {
         code: 200,
         success: true,
         message: `Status ketersediaan menu "${updatedMenu.nama}" berhasil diubah menjadi ${
-          updatedMenu.is_available ? 'Tersedia' : 'Habis'
+          updatedMenu.status_tersedia ? 'Tersedia' : 'Habis'
         }.`,
         data: { menu: updatedMenu }
       });
@@ -265,7 +265,7 @@ const AdminController = {
       const { id } = req.params;
       const { status } = req.body;
 
-      const validStatuses = ['menunggu', 'dikonfirmasi', 'dibatalkan'];
+      const validStatuses = ['menunggu konfirmasi', 'dikonfirmasi', 'dibatalkan'];
       if (!validStatuses.includes(status)) {
         return sendResponse(res, {
           code: 400,
@@ -286,7 +286,7 @@ const AdminController = {
       return sendResponse(res, {
         code: 200,
         success: true,
-        message: `Status reservasi untuk ${updated.nama_pemesan} berhasil diubah menjadi "${status}".`,
+        message: `Status reservasi untuk ${updated.nama_tamu} berhasil diubah menjadi "${status}".`,
         data: { reservation: updated }
       });
     } catch (error) {

@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../config/db');
 
 const AdminModel = {
   /**
@@ -30,7 +30,7 @@ const AdminModel = {
       SELECT 
         COUNT(*) as total_reservations,
         SUM(CASE WHEN tanggal = ? THEN 1 ELSE 0 END) as reservations_today,
-        SUM(CASE WHEN status = 'menunggu' THEN 1 ELSE 0 END) as reservations_pending,
+        SUM(CASE WHEN status = 'menunggu konfirmasi' THEN 1 ELSE 0 END) as reservations_pending,
         SUM(CASE WHEN status = 'dikonfirmasi' THEN 1 ELSE 0 END) as reservations_confirmed
       FROM reservations
     `).get(today);
@@ -39,8 +39,8 @@ const AdminModel = {
     const menuRow = db.prepare(`
       SELECT 
         COUNT(*) as total_menus,
-        SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) as menus_available,
-        SUM(CASE WHEN is_available = 0 THEN 1 ELSE 0 END) as menus_out_of_stock
+        SUM(CASE WHEN status_tersedia = 1 THEN 1 ELSE 0 END) as menus_available,
+        SUM(CASE WHEN status_tersedia = 0 THEN 1 ELSE 0 END) as menus_out_of_stock
       FROM menu_items
     `).get();
 
@@ -62,7 +62,7 @@ const AdminModel = {
     `).all();
 
     const recentReservations = db.prepare(`
-      SELECT id, nama_pemesan, kontak, tanggal, jam, jumlah_orang, status
+      SELECT id, nama_tamu, kontak, tanggal, jam, jumlah_orang, status
       FROM reservations
       ORDER BY id DESC LIMIT 5
     `).all();

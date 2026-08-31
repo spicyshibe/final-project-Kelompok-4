@@ -29,7 +29,7 @@ export default function OverviewTab({ stats, onNavigateTab }) {
     switch (status) {
       case 'dikonfirmasi':
         return <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">DIKONFIRMASI</span>;
-      case 'menunggu':
+      case 'menunggu konfirmasi':
         return <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">MENUNGGU</span>;
       case 'dibatalkan':
         return <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">DIBATALKAN</span>;
@@ -168,7 +168,7 @@ export default function OverviewTab({ stats, onNavigateTab }) {
                 <div key={res.id} className="py-3 flex items-center justify-between text-xs">
                   <div>
                     <div className="font-semibold text-gray-900 flex items-center gap-2">
-                      <span>{res.nama_pemesan}</span>
+                      <span>{res.nama_tamu}</span>
                       {getResStatusBadge(res.status)}
                     </div>
                     <div className="text-gray-500 text-[11px] mt-0.5">

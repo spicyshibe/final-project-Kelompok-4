@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../config/db');
 
 const MenuModel = {
   /**
@@ -7,7 +7,7 @@ const MenuModel = {
   findAll({ kategori, search, isAvailable } = {}) {
     let query = `
       SELECT 
-        m.id, m.nama, m.deskripsi, m.harga, m.kategori, m.kalori, m.gambar, m.is_available, m.created_at,
+        m.id, m.nama, m.deskripsi, m.harga, m.kategori, m.kalori, m.gambar, m.status_tersedia, m.created_at,
         GROUP_CONCAT(a.nama_alergen, ', ') as allergens_str
       FROM menu_items m
       LEFT JOIN menu_item_allergens ma ON m.id = ma.menu_item_id
@@ -22,7 +22,7 @@ const MenuModel = {
     }
 
     if (isAvailable !== undefined && isAvailable !== null && isAvailable !== '') {
-      query += ` AND m.is_available = ?`;
+      query += ` AND m.status_tersedia = ?`;
       params.push(Number(isAvailable));
     }
 
@@ -39,7 +39,7 @@ const MenuModel = {
     return rows.map((row) => ({
       ...row,
       allergens: row.allergens_str ? row.allergens_str.split(', ') : [],
-      is_available: Boolean(row.is_available)
+      status_tersedia: Boolean(row.status_tersedia)
     }));
   },
 
@@ -49,7 +49,7 @@ const MenuModel = {
   findById(id) {
     const stmt = db.prepare(`
       SELECT 
-        m.id, m.nama, m.deskripsi, m.harga, m.kategori, m.kalori, m.gambar, m.is_available, m.created_at,
+        m.id, m.nama, m.deskripsi, m.harga, m.kategori, m.kalori, m.gambar, m.status_tersedia, m.created_at,
         GROUP_CONCAT(a.nama_alergen, ', ') as allergens_str
       FROM menu_items m
       LEFT JOIN menu_item_allergens ma ON m.id = ma.menu_item_id
@@ -63,7 +63,7 @@ const MenuModel = {
     return {
       ...row,
       allergens: row.allergens_str ? row.allergens_str.split(', ') : [],
-      is_available: Boolean(row.is_available)
+      status_tersedia: Boolean(row.status_tersedia)
     };
   },
 
@@ -72,7 +72,7 @@ const MenuModel = {
    */
   create({ nama, deskripsi, harga, kategori, kalori = 0, gambar = '', allergens = [] }) {
     const stmt = db.prepare(`
-      INSERT INTO menu_items (nama, deskripsi, harga, kategori, kalori, gambar, is_available)
+      INSERT INTO menu_items (nama, deskripsi, harga, kategori, kalori, gambar, status_tersedia)
       VALUES (?, ?, ?, ?, ?, ?, 1)
     `);
     const info = stmt.run(nama, deskripsi, harga, kategori, kalori, gambar);
@@ -89,7 +89,7 @@ const MenuModel = {
   /**
    * Update menu (FR-2.3 / FR-8)
    */
-  update(id, { nama, deskripsi, harga, kategori, kalori, gambar, allergens, is_available }) {
+  update(id, { nama, deskripsi, harga, kategori, kalori, gambar, allergens, status_tersedia }) {
     const fields = [];
     const params = [];
 
@@ -99,7 +99,7 @@ const MenuModel = {
     if (kategori !== undefined) { fields.push('kategori = ?'); params.push(kategori); }
     if (kalori !== undefined) { fields.push('kalori = ?'); params.push(kalori); }
     if (gambar !== undefined) { fields.push('gambar = ?'); params.push(gambar); }
-    if (is_available !== undefined) { fields.push('is_available = ?'); params.push(is_available ? 1 : 0); }
+    if (status_tersedia !== undefined) { fields.push('status_tersedia = ?'); params.push(status_tersedia ? 1 : 0); }
 
     if (fields.length > 0) {
       params.push(id);
@@ -120,8 +120,8 @@ const MenuModel = {
   toggleAvailability(id) {
     const menu = this.findById(id);
     if (!menu) return null;
-    const newStatus = menu.is_available ? 0 : 1;
-    db.prepare('UPDATE menu_items SET is_available = ? WHERE id = ?').run(newStatus, id);
+    const newStatus = menu.status_tersedia ? 0 : 1;
+    db.prepare('UPDATE menu_items SET status_tersedia = ? WHERE id = ?').run(newStatus, id);
     return this.findById(id);
   },
 

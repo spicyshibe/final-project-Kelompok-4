@@ -76,7 +76,7 @@ export default function ReservationManagement() {
             DIKONFIRMASI
           </span>
         );
-      case 'menunggu':
+      case 'menunggu konfirmasi':
         return (
           <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200 animate-pulse">
             MENUNGGU KONFIRMASI
@@ -130,7 +130,7 @@ export default function ReservationManagement() {
         <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
           {[
             { id: 'semua', label: 'Semua Status' },
-            { id: 'menunggu', label: 'Menunggu' },
+            { id: 'menunggu konfirmasi', label: 'Menunggu' },
             { id: 'dikonfirmasi', label: 'Dikonfirmasi' },
             { id: 'dibatalkan', label: 'Dibatalkan' }
           ].map((tab) => (
@@ -201,7 +201,7 @@ export default function ReservationManagement() {
                     {/* Pemesan */}
                     <td className="py-3.5 px-4">
                       <div>
-                        <div className="font-bold text-gray-900 text-sm">{res.nama_pemesan}</div>
+                        <div className="font-bold text-gray-900 text-sm">{res.nama_tamu}</div>
                         <div className="text-gray-500 text-[11px] flex items-center gap-1 mt-0.5">
                           <Phone className="w-3 h-3 text-gray-400" />
                           {res.kontak}
@@ -242,7 +242,7 @@ export default function ReservationManagement() {
                     {/* Actions */}
                     <td className="py-3.5 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        {res.status === 'menunggu' && (
+                        {res.status === 'menunggu konfirmasi' && (
                           <>
                             <button
                               onClick={() => handleUpdateStatus(res.id, 'dikonfirmasi')}
