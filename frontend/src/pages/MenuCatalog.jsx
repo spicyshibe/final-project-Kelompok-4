@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import MenuCard from '../components/MenuCard';
 import MenuFilter from '../components/MenuFilter';
@@ -35,7 +34,6 @@ function MenuCatalog() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Navbar />
 
       {/* Hero Banner Section */}
       <section className="bg-gradient-to-br from-amber-600 via-orange-600 to-orange-700 text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">

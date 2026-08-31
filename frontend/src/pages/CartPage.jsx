@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CheckoutModal from '../components/CheckoutModal';
 import OrderSuccessModal from '../components/OrderSuccessModal';
@@ -39,7 +38,6 @@ function CartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Navbar />
 
       {/* Header Banner */}
       <section className="bg-gradient-to-r from-orange-600 to-amber-600 text-white py-10 px-4 sm:px-6 lg:px-8">

@@ -1,18 +1,25 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
- * Wrapper buat API fetch ke backend Express
+ * Helper untuk mengambil token otentikasi dari localStorage
+ */
+export function getAuthToken() {
+  return localStorage.getItem('token');
+}
+
+/**
+ * Wrapper dasar buat request fetch ke backend Express - auto JSON parsing,
+ * nempelin JWT token kalau ada, dan lempar Error kalau gagal.
  */
 export async function apiRequest(path, options = {}) {
   const url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
+  const token = getAuthToken();
 
   const response = await fetch(url, {
     ...options,
     headers: {
-      ...defaultHeaders,
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
   });
@@ -71,15 +78,6 @@ export async function apiPut(path, body = {}) {
 }
 
 /**
- * DELETE request helper
- */
-export async function apiDelete(path) {
-  return apiRequest(path, {
-    method: 'DELETE',
-  });
-}
-
-/**
  * PATCH request helper
  */
 export async function apiPatch(path, body = {}) {
@@ -89,4 +87,18 @@ export async function apiPatch(path, body = {}) {
   });
 }
 
+/**
+ * DELETE request helper
+ */
+export async function apiDelete(path) {
+  return apiRequest(path, { method: 'DELETE' });
+}
 
+export default {
+  get: apiGet,
+  post: apiPost,
+  put: apiPut,
+  patch: apiPatch,
+  delete: apiDelete,
+  getToken: getAuthToken,
+};

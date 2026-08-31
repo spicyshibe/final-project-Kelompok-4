@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import MenuCard from '../components/MenuCard';
 import MenuDetailModal from '../components/MenuDetailModal';
@@ -46,7 +45,6 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-amber-600 via-orange-600 to-amber-700 text-white overflow-hidden py-16 sm:py-24">

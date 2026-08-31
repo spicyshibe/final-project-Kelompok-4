@@ -3,6 +3,8 @@ const cors = require('cors');
 
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
+const authRoutes = require('./routes/auth.routes');
+const adminRoutes = require('./routes/admin.routes');
 const chatRoutes = require('./routes/chat.routes');
 const reviewRoutes = require('./routes/review.routes');
 const menuRoutes = require('./routes/menu.routes');
@@ -16,7 +18,11 @@ app.use(cors({ origin: config.frontendUrl }));
 app.use(express.json());
 
 // Routes
-app.use('/api/health', healthRoutes); // Updated to /api/health from main
+app.use('/health', healthRoutes);
+app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/menu', menuRoutes);

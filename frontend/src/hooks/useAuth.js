@@ -1,0 +1,15 @@
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+
+/**
+ * Custom hook untuk mengakses state dan method autentikasi
+ */
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth harus digunakan di dalam <AuthProvider>');
+  }
+  return context;
+}
+
+export default useAuth;
