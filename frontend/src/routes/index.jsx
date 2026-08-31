@@ -1,5 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
+import MenuCatalog from '../pages/MenuCatalog';
+import CartPage from '../pages/CartPage';
 
 /**
  * Semua route halaman didaftarin di sini. App.jsx cuma manggil
@@ -10,6 +12,9 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/menu" element={<MenuCatalog />} />
+      <Route path="/menu/:id" element={<MenuCatalog />} />
+      <Route path="/cart" element={<CartPage />} />
     </Routes>
   );
 }
