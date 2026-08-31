@@ -1,7 +1,7 @@
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 
-const dbPath = path.join(__dirname, '..', 'restaurant.sqlite');
+const dbPath = process.env.DB_PATH || path.join(__dirname, '..', 'restaurant.sqlite');
 const db = new DatabaseSync(dbPath);
 
 // Enable foreign keys

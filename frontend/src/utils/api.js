@@ -78,3 +78,13 @@ export async function apiDelete(path) {
     method: 'DELETE',
   });
 }
+
+/**
+ * PATCH request helper
+ */
+export async function apiPatch(path, body = {}) {
+  return apiRequest(path, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+}
