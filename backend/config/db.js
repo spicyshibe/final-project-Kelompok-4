@@ -114,6 +114,16 @@ function initDatabase() {
  * Seed initial allergens & restaurant menu items if empty
  */
 function seedData() {
+  const countUsers = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  if (countUsers.count === 0) {
+    const insertUser = db.prepare(`
+      INSERT INTO users (id, nama, email, password, role)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    insertUser.run(1, 'Pelanggan Demo', 'pelanggan@restonusantara.com', 'hashed_pass_demo', 'pelanggan');
+    insertUser.run(2, 'Admin Resto', 'admin@restonusantara.com', 'hashed_pass_admin', 'admin');
+  }
+
   const countAllergens = db.prepare('SELECT COUNT(*) as count FROM allergens').get();
   if (countAllergens.count === 0) {
     const insertAllergen = db.prepare('INSERT INTO allergens (id, nama_alergen, label, deskripsi) VALUES (?, ?, ?, ?)');
