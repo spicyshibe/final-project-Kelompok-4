@@ -9,6 +9,10 @@ require('dotenv').config();
 const config = {
   port: process.env.PORT || 3000,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
+  jwtSecret: process.env.JWT_SECRET || 'secret_jwt_key_restoran_paw_kelompok_4_super_secure',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  dbPath: process.env.DB_PATH || './database/restaurant.db',
 };
 
 module.exports = config;
+
