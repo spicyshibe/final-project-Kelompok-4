@@ -13,3 +13,23 @@ export async function apiGet(path) {
 
   return res.json();
 }
+
+/**
+ * Wrapper kecil buat POST request ke backend
+ */
+export async function apiPost(path, body) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Request gagal: ${res.status} ${res.statusText}`);
+  }
+
+  return res.json();
+}
