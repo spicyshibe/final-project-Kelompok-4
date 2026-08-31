@@ -9,6 +9,7 @@ require('dotenv').config();
 const config = {
   port: process.env.PORT || 3000,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
+  geminiApiKey: process.env.GEMINI_API_KEY,
 };
 
 module.exports = config;
