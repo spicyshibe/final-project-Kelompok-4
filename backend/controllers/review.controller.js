@@ -13,27 +13,25 @@ const getReviewsByMenu = (req, res) => {
     });
   }
 
-  // Mengambil daftar ulasan untuk suatu menu
-  // (Nantinya bisa di-join dengan tabel Users untuk mendapatkan nama user)
-  const sql = `SELECT * FROM reviews WHERE menu_item_id = ? ORDER BY created_at DESC`;
-  
-  db.all(sql, [menuId], (err, rows) => {
-    if (err) {
-      console.error('Error fetching reviews:', err.message);
-      return sendResponse(res, {
-        code: 500,
-        success: false,
-        message: 'Gagal mengambil ulasan'
-      });
-    }
-
+  try {
+    const sql = `SELECT * FROM reviews WHERE menu_item_id = ? ORDER BY created_at DESC`;
+    const stmt = db.prepare(sql);
+    const rows = stmt.all(menuId);
+    
     return sendResponse(res, {
       code: 200,
       success: true,
       message: 'Berhasil mengambil ulasan',
       data: rows
     });
-  });
+  } catch (err) {
+    console.error('Error fetching reviews:', err.message);
+    return sendResponse(res, {
+      code: 500,
+      success: false,
+      message: 'Gagal mengambil ulasan'
+    });
+  }
 };
 
 // POST /api/reviews
@@ -56,32 +54,32 @@ const addReview = (req, res) => {
     });
   }
 
-  const sql = `INSERT INTO reviews (user_id, menu_item_id, rating, komentar) VALUES (?, ?, ?, ?)`;
-  const params = [user_id, menu_item_id, rating, komentar || ''];
-
-  db.run(sql, params, function(err) {
-    if (err) {
-      console.error('Error adding review:', err.message);
-      return sendResponse(res, {
-        code: 500,
-        success: false,
-        message: 'Gagal menambahkan ulasan'
-      });
-    }
+  try {
+    const sql = `INSERT INTO reviews (user_id, menu_item_id, rating, komentar) VALUES (?, ?, ?, ?) RETURNING id`;
+    const stmt = db.prepare(sql);
+    // run() doesn't return lastInsertRowid natively in the same way, but we can use get() with RETURNING id
+    const result = stmt.get(user_id, menu_item_id, rating, komentar || '');
 
     return sendResponse(res, {
       code: 201,
       success: true,
       message: 'Ulasan berhasil ditambahkan',
       data: {
-        id: this.lastID,
+        id: result.id,
         user_id,
         menu_item_id,
         rating,
         komentar
       }
     });
-  });
+  } catch (err) {
+    console.error('Error adding review:', err.message);
+    return sendResponse(res, {
+      code: 500,
+      success: false,
+      message: 'Gagal menambahkan ulasan'
+    });
+  }
 };
 
 module.exports = {
