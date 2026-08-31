@@ -69,3 +69,4 @@ Kalau nama disebut bareng fitur spesifik ("saya Gandhi mau kerjain cart"), langs
 - API key Gemini disimpan di server (`backend/.env`), jangan pernah expose ke client (NFR Security di PRD).
 - Fitur non-AI harus tetap jalan walau Gemini API gagal/timeout (fallback message).
 - Password wajib di-hash (bcrypt), validasi input server-side.
+- **Commit & push: JANGAN pakai trailer** (no `Co-Authored-By`, no `Claude-Session`, no signature apapun) di commit message manapun.
