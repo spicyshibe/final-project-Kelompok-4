@@ -7,6 +7,7 @@ import MenuDetailModal from '../components/MenuDetailModal';
 import { useHealthCheck } from '../hooks/useHealthCheck';
 import HealthBadge from '../components/HealthBadge';
 import { apiGet } from '../utils/api';
+import { useCart } from '../context/CartContext';
 import {
   Utensils,
   ArrowRight,
@@ -20,9 +21,14 @@ import {
 
 function Home() {
   const { status, data: healthData, checkHealth } = useHealthCheck();
+  const { addToCart } = useCart();
   const [featuredMenu, setFeaturedMenu] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loadingFeatured, setLoadingFeatured] = useState(true);
+
+  const handleAddToCart = async (item, qty = 1) => {
+    await addToCart(item, qty);
+  };
 
   useEffect(() => {
     async function loadFeatured() {
@@ -217,7 +223,7 @@ function Home() {
                 key={item.id}
                 item={item}
                 onSelect={(menu) => setSelectedItem(menu)}
-                onAddToCart={(menu) => setSelectedItem(menu)}
+                onAddToCart={(menu) => handleAddToCart(menu, 1)}
               />
             ))}
           </div>
@@ -246,7 +252,7 @@ function Home() {
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                Fitur Modul: <strong className="text-gray-700">Katalog Menu & Alergen (Gandhi - 20240140045)</strong>
+                Fitur Modul: <strong className="text-gray-700">Katalog Menu & Keranjang (Gandhi - 20240140045)</strong>
               </p>
             </div>
 
@@ -268,7 +274,7 @@ function Home() {
         <MenuDetailModal
           item={selectedItem}
           onClose={() => setSelectedItem(null)}
-          onAddToCart={() => setSelectedItem(null)}
+          onAddToCart={handleAddToCart}
         />
       )}
 

@@ -1,12 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
-import { UtensilsCrossed, ShoppingBag, Calendar, Clock, Sparkles } from 'lucide-react';
+import { UtensilsCrossed, ShoppingBag, Sparkles } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
-function Navbar({ cartCount = 0 }) {
+function Navbar() {
   const location = useLocation();
+  const { cart, toggleCart } = useCart();
 
   const navLinks = [
     { name: 'Beranda', path: '/' },
     { name: 'Katalog Menu', path: '/menu' },
+    { name: 'Keranjang', path: '/cart' },
     { name: 'Reservasi Meja', path: '/reservasi', badge: 'Segera' },
     { name: 'Lacak Pesanan', path: '/tracking', badge: 'Segera' },
   ];
@@ -14,7 +17,7 @@ function Navbar({ cartCount = 0 }) {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
@@ -65,19 +68,20 @@ function Navbar({ cartCount = 0 }) {
               <span>AI Asisten Menu</span>
             </div>
 
-            {/* Cart Button */}
-            <Link
-              to="/menu"
-              className="relative p-2.5 rounded-xl bg-gray-100 hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-colors flex items-center justify-center"
-              title="Keranjang Belanja"
+            {/* Cart Button with Slide Drawer Trigger */}
+            <button
+              type="button"
+              onClick={toggleCart}
+              className="relative p-2.5 rounded-xl bg-gray-100 hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-colors flex items-center justify-center cursor-pointer"
+              title="Buka Keranjang Belanja"
             >
               <ShoppingBag className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-600 text-white font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow">
-                  {cartCount}
+              {cart.total_items > 0 && (
+                <span className="absolute -top-1 -right-1 bg-orange-600 text-white font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                  {cart.total_items}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       </div>

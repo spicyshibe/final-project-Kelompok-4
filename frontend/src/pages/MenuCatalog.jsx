@@ -5,6 +5,7 @@ import MenuCard from '../components/MenuCard';
 import MenuFilter from '../components/MenuFilter';
 import MenuDetailModal from '../components/MenuDetailModal';
 import { useMenu } from '../hooks/useMenu';
+import { useCart } from '../context/CartContext';
 import { Utensils, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
 
 function MenuCatalog() {
@@ -25,28 +26,16 @@ function MenuCatalog() {
     resetFilters,
   } = useMenu();
 
+  const { addToCart } = useCart();
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [toastMessage, setToastMessage] = useState(null);
 
-  const handleAddToCart = (item, qty = 1) => {
-    setCartItemsCount((prev) => prev + qty);
-    setToastMessage(`✓ ${qty}x ${item.nama} ditambahkan ke pesanan`);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
+  const handleAddToCart = async (item, qty = 1) => {
+    await addToCart(item, qty);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Navbar cartCount={cartItemsCount} />
-
-      {/* Floating Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-gray-900 text-white px-5 py-3 rounded-2xl shadow-xl border border-gray-800 text-sm font-semibold flex items-center gap-2 animate-bounce">
-          <span>{toastMessage}</span>
-        </div>
-      )}
+      <Navbar />
 
       {/* Hero Banner Section */}
       <section className="bg-gradient-to-br from-amber-600 via-orange-600 to-orange-700 text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
