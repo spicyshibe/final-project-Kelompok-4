@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const config = require('../config/env');
-const { sendResponse } = require('../utils/response');
+const sendResponse = require('../utils/response');
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(config.geminiApiKey || 'mock-key');

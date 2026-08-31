@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { sendResponse } = require('../utils/response');
+const sendResponse = require('../utils/response');
 
 // GET /api/reviews/menu/:menuId
 const getReviewsByMenu = (req, res) => {
