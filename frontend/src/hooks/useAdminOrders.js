@@ -11,7 +11,7 @@ export function useAdminOrders() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await apiGet('/orders');
+      const result = await apiGet('/api/orders');
       setOrders(result.data);
       setError(null);
     } catch (err) {
@@ -23,7 +23,7 @@ export function useAdminOrders() {
 
   const updateStatus = useCallback(
     async (id, status) => {
-      await apiPatch(`/orders/${id}/status`, { status });
+      await apiPatch(`/api/orders/${id}/status`, { status });
       await fetchAll();
     },
     [fetchAll]

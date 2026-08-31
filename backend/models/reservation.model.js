@@ -1,14 +1,14 @@
 const db = require('../config/db');
 
-const STATUSES = ['menunggu', 'dikonfirmasi', 'dibatalkan'];
+const STATUSES = ['menunggu konfirmasi', 'dikonfirmasi', 'dibatalkan'];
 // ponytail: jumlah meja restoran di-hardcode, ganti ke tabel `tables` kalau nanti butuh atur per-meja
 const MAX_MEJA_PER_SLOT = 5;
 
-function create({ user_id, tanggal, jam, jumlah_orang }) {
+function create({ user_id, nama_tamu, kontak, tanggal, jam, jumlah_orang, catatan }) {
   const stmt = db.prepare(
-    `INSERT INTO reservations (user_id, tanggal, jam, jumlah_orang) VALUES (?, ?, ?, ?)`
+    `INSERT INTO reservations (user_id, nama_tamu, kontak, tanggal, jam, jumlah_orang, catatan) VALUES (?, ?, ?, ?, ?, ?, ?)`
   );
-  const info = stmt.run(user_id, tanggal, jam, jumlah_orang);
+  const info = stmt.run(user_id ?? null, nama_tamu, kontak, tanggal, jam, jumlah_orang, catatan ?? null);
   return findById(info.lastInsertRowid);
 }
 

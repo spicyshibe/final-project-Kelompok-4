@@ -12,7 +12,7 @@ export function useOrderTracking() {
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await apiGet(`/orders/me?user_id=${CURRENT_USER_ID}`);
+      const result = await apiGet(`/api/orders/me?user_id=${CURRENT_USER_ID}`);
       setOrders(result.data);
       setError(null);
     } catch (err) {

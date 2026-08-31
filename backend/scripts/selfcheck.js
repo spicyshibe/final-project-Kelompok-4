@@ -8,7 +8,7 @@ const orderModel = require('../models/order.model');
 // isSlotAvailable: slot kosong -> true, slot penuh (>= MAX_MEJA_PER_SLOT) -> false
 for (let i = 0; i < 5; i++) {
   assert.strictEqual(reservationModel.isSlotAvailable('2026-09-01', '19:00'), true, `slot ke-${i} harusnya masih available`);
-  reservationModel.create({ user_id: 1, tanggal: '2026-09-01', jam: '19:00', jumlah_orang: 2 });
+  reservationModel.create({ user_id: 1, nama_tamu: 'Tamu Test', kontak: '08123456789', tanggal: '2026-09-01', jam: '19:00', jumlah_orang: 2 });
 }
 assert.strictEqual(reservationModel.isSlotAvailable('2026-09-01', '19:00'), false, 'slot harusnya penuh setelah 5 reservasi');
 

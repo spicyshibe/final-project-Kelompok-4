@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 function ReservationForm({ onSubmit }) {
+  const [namaTamu, setNamaTamu] = useState('');
+  const [kontak, setKontak] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [jam, setJam] = useState('');
   const [jumlahOrang, setJumlahOrang] = useState(2);
@@ -12,7 +14,9 @@ function ReservationForm({ onSubmit }) {
     setSubmitting(true);
     setError(null);
     try {
-      await onSubmit({ tanggal, jam, jumlah_orang: Number(jumlahOrang) });
+      await onSubmit({ nama_tamu: namaTamu, kontak, tanggal, jam, jumlah_orang: Number(jumlahOrang) });
+      setNamaTamu('');
+      setKontak('');
       setTanggal('');
       setJam('');
       setJumlahOrang(2);
@@ -25,6 +29,26 @@ function ReservationForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+        <input
+          type="text"
+          value={namaTamu}
+          onChange={(e) => setNamaTamu(e.target.value)}
+          required
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Kontak (HP/Email)</label>
+        <input
+          type="text"
+          value={kontak}
+          onChange={(e) => setKontak(e.target.value)}
+          required
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+        />
+      </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
         <input

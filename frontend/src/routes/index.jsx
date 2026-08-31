@@ -4,6 +4,8 @@ import Reservation from '../pages/Reservation';
 import OrderTracking from '../pages/OrderTracking';
 import AdminReservations from '../pages/AdminReservations';
 import AdminOrders from '../pages/AdminOrders';
+import MenuCatalog from '../pages/MenuCatalog';
+import CartPage from '../pages/CartPage';
 
 /**
  * Semua route halaman didaftarin di sini. App.jsx cuma manggil
@@ -18,6 +20,9 @@ function AppRoutes() {
       <Route path="/pesanan" element={<OrderTracking />} />
       <Route path="/admin/reservasi" element={<AdminReservations />} />
       <Route path="/admin/pesanan" element={<AdminOrders />} />
+      <Route path="/menu" element={<MenuCatalog />} />
+      <Route path="/menu/:id" element={<MenuCatalog />} />
+      <Route path="/cart" element={<CartPage />} />
     </Routes>
   );
 }

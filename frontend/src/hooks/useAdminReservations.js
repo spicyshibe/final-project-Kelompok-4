@@ -11,7 +11,7 @@ export function useAdminReservations() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await apiGet('/reservations');
+      const result = await apiGet('/api/reservations');
       setReservations(result.data);
       setError(null);
     } catch (err) {
@@ -23,7 +23,7 @@ export function useAdminReservations() {
 
   const updateStatus = useCallback(
     async (id, status) => {
-      await apiPatch(`/reservations/${id}/status`, { status });
+      await apiPatch(`/api/reservations/${id}/status`, { status });
       await fetchAll();
     },
     [fetchAll]

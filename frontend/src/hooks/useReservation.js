@@ -12,7 +12,7 @@ export function useReservation() {
   const fetchReservations = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await apiGet(`/reservations/me?user_id=${CURRENT_USER_ID}`);
+      const result = await apiGet(`/api/reservations/me?user_id=${CURRENT_USER_ID}`);
       setReservations(result.data);
       setError(null);
     } catch (err) {
@@ -23,8 +23,15 @@ export function useReservation() {
   }, []);
 
   const submitReservation = useCallback(
-    async ({ tanggal, jam, jumlah_orang }) => {
-      const result = await apiPost('/reservations', { user_id: CURRENT_USER_ID, tanggal, jam, jumlah_orang });
+    async ({ nama_tamu, kontak, tanggal, jam, jumlah_orang }) => {
+      const result = await apiPost('/api/reservations', {
+        user_id: CURRENT_USER_ID,
+        nama_tamu,
+        kontak,
+        tanggal,
+        jam,
+        jumlah_orang,
+      });
       await fetchReservations();
       return result;
     },
