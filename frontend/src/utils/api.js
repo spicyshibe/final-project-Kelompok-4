@@ -13,3 +13,21 @@ export async function apiGet(path) {
 
   return res.json();
 }
+
+async function sendJson(method, path, body) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(json.message || `Request gagal: ${res.status} ${res.statusText}`);
+  }
+
+  return json;
+}
+
+export const apiPost = (path, body) => sendJson('POST', path, body);
+export const apiPatch = (path, body) => sendJson('PATCH', path, body);
