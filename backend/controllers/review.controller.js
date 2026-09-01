@@ -55,6 +55,24 @@ const addReview = (req, res) => {
   }
 
   try {
+    // FR-7.1: cuma pelanggan yang udah pernah pesan menu ini yang boleh review
+    const pernahPesan = db
+      .prepare(
+        `SELECT 1 FROM order_items oi
+         JOIN orders o ON o.id = oi.order_id
+         WHERE o.user_id = ? AND oi.menu_item_id = ?
+         LIMIT 1`
+      )
+      .get(user_id, menu_item_id);
+
+    if (!pernahPesan) {
+      return sendResponse(res, {
+        code: 403,
+        success: false,
+        message: 'Kamu cuma bisa memberi ulasan untuk menu yang pernah kamu pesan'
+      });
+    }
+
     const sql = `INSERT INTO reviews (user_id, menu_item_id, rating, komentar) VALUES (?, ?, ?, ?) RETURNING id`;
     const stmt = db.prepare(sql);
     // run() doesn't return lastInsertRowid natively in the same way, but we can use get() with RETURNING id
