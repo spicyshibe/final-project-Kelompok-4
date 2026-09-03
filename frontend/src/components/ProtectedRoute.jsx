@@ -23,7 +23,8 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    const loginPath = roles && (Array.isArray(roles) ? roles : [roles]).includes('admin') ? '/admin/login' : '/login';
+    return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
   if (roles) {

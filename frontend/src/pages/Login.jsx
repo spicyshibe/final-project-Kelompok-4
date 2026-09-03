@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UtensilsCrossed, Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { UtensilsCrossed, Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState('pelanggan'); // 'pelanggan' | 'admin'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const from = location.state?.from?.pathname || (activeTab === 'admin' ? '/admin/dashboard' : '/');
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,16 +30,10 @@ export default function Login() {
       const response = await login(email, password);
       const userRole = response?.data?.user?.role;
 
-      if (activeTab === 'admin' && userRole !== 'admin') {
-        setError('Akun ini bukan akun Administrator/Staff.');
-        setIsSubmitting(false);
-        return;
-      }
-
       if (userRole === 'admin') {
         navigate('/admin/dashboard', { replace: true });
       } else {
-        navigate(from === '/admin/dashboard' ? '/' : from, { replace: true });
+        navigate(from, { replace: true });
       }
     } catch (err) {
       setError(err.message || 'Login gagal. Periksa email dan password Anda.');
@@ -59,38 +52,6 @@ export default function Login() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Selamat Datang Kembali</h2>
           <p className="text-sm text-gray-500 mt-1">Masuk ke akun RestoHub Anda</p>
-        </div>
-
-        {/* Tab Role Switcher (FR-1.1 & FR-1.2) */}
-        <div className="bg-gray-100/80 p-1 rounded-xl flex mb-6 border border-gray-200/60">
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('pelanggan');
-              setError('');
-            }}
-            className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${
-              activeTab === 'pelanggan'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-800'
-            }`}
-          >
-            👤 Pelanggan
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('admin');
-              setError('');
-            }}
-            className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${
-              activeTab === 'admin'
-                ? 'bg-white text-purple-800 shadow-sm'
-                : 'text-gray-500 hover:text-gray-800'
-            }`}
-          >
-            🛡️ Staff / Admin
-          </button>
         </div>
 
         {/* Form Card */}
@@ -149,11 +110,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full mt-2 py-2.5 px-4 text-sm font-semibold rounded-xl text-white shadow-md transition flex items-center justify-center gap-2 ${
-                activeTab === 'admin'
-                  ? 'bg-purple-700 hover:bg-purple-800 shadow-purple-600/20'
-                  : 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
-              } disabled:opacity-60`}
+              className="w-full mt-2 py-2.5 px-4 text-sm font-semibold rounded-xl text-white shadow-md transition flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>
@@ -162,7 +119,7 @@ export default function Login() {
                 </>
               ) : (
                 <>
-                  <span>Masuk {activeTab === 'admin' ? 'Sebagai Admin' : ''}</span>
+                  <span>Masuk</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

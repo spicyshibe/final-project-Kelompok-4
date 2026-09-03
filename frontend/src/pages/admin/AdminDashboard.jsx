@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   }, []);
 
   const tabs = [
-    { id: 'overview', label: 'Ikhtisar', icon: LayoutDashboard },
+    { id: 'overview', label: 'Menu Utama', icon: LayoutDashboard },
     { id: 'menu', label: 'Kelola Menu', icon: Utensils, count: stats?.menus?.total_menus },
     { id: 'reservations', label: 'Reservasi Meja', icon: Calendar, count: stats?.reservations?.reservations_pending },
     { id: 'orders', label: 'Status Pesanan', icon: ShoppingBag, count: stats?.orders?.orders_baru },

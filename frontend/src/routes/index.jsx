@@ -5,6 +5,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Profile from '../pages/Profile';
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminLogin from '../pages/admin/AdminLogin';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Reservation from '../pages/Reservation';
 import OrderTracking from '../pages/OrderTracking';
@@ -37,7 +38,10 @@ function AppRoutes() {
         }
       />
 
-      {/* Admin Only Routes (FR-1.2, FR-1.3) - tabs: overview/menu/reservations/orders/users */}
+      {/* Admin Login (FR-1.2) - portal terpisah dari login pelanggan */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+
+      {/* Admin Only Routes (FR-1.3) - tabs: overview/menu/reservations/orders/users */}
       <Route
         path="/admin/dashboard"
         element={

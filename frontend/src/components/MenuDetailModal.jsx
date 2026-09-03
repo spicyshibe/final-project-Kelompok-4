@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Flame, Star, AlertTriangle, ShieldCheck, Plus, Minus, ShoppingBag, Check } from 'lucide-react';
 import { formatRupiah } from '../utils/currency';
+import ReviewSection from './ReviewSection';
 
 function MenuDetailModal({ item, onClose, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
@@ -16,14 +17,18 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
     kalori,
     gambar,
     allergens = [],
-    rating_avg = 4.8,
-    review_count = 12,
+    rating_avg = 0,
+    review_count = 0,
+    status_tersedia = true,
   } = item;
+
+  const habis = !status_tersedia;
 
   const handleIncrement = () => setQuantity((q) => q + 1);
   const handleDecrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
   const handleAdd = () => {
+    if (habis) return;
     if (onAddToCart) {
       onAddToCart(item, quantity);
     }
@@ -63,6 +68,14 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
+          {habis && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+              <span className="text-base font-bold px-5 py-2 rounded-full bg-red-600 text-white shadow-lg -rotate-6">
+                Habis
+              </span>
+            </div>
+          )}
+
           {/* Badges in Image */}
           <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between text-white">
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-600 shadow-md">
@@ -74,10 +87,12 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
                 <Flame className="w-4 h-4 text-amber-400 fill-amber-400" />
                 <span>{kalori} kkal</span>
               </div>
-              <div className="flex items-center gap-1 bg-black/50 backdrop-blur px-2.5 py-1 rounded-lg text-xs font-medium">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                <span>{rating_avg} ({review_count} ulasan)</span>
-              </div>
+              {review_count > 0 && (
+                <div className="flex items-center gap-1 bg-black/50 backdrop-blur px-2.5 py-1 rounded-lg text-xs font-medium">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span>{rating_avg} ({review_count} ulasan)</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -150,6 +165,9 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
             )}
           </div>
 
+          {/* Ulasan Pelanggan (FR-7.2) */}
+          <ReviewSection menuId={item.id} />
+
           {/* Quantity and Add to Cart Bar */}
           <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             {/* Quantity Stepper */}
@@ -189,13 +207,18 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
               <button
                 type="button"
                 onClick={handleAdd}
+                disabled={habis}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-sm text-white shadow-lg transition-all ${
-                  added
+                  habis
+                    ? 'bg-gray-300 cursor-not-allowed shadow-none'
+                    : added
                     ? 'bg-emerald-600 shadow-emerald-500/20'
                     : 'bg-orange-600 hover:bg-orange-700 active:scale-98 shadow-orange-500/25'
                 }`}
               >
-                {added ? (
+                {habis ? (
+                  <span>Menu Sedang Habis</span>
+                ) : added ? (
                   <>
                     <Check className="w-4 h-4" />
                     <span>Ditambahkan ke Pesanan!</span>

@@ -136,12 +136,20 @@ function addToCart(req, res) {
     }
 
     // Cek menu ada di DB
-    const menuItem = db.prepare('SELECT id, nama, harga FROM menu_items WHERE id = ?').get(menu_item_id);
+    const menuItem = db.prepare('SELECT id, nama, harga, status_tersedia FROM menu_items WHERE id = ?').get(menu_item_id);
     if (!menuItem) {
       return sendResponse(res, {
         code: 404,
         success: false,
         message: `Menu dengan ID ${menu_item_id} tidak ditemukan`,
+      });
+    }
+
+    if (!menuItem.status_tersedia) {
+      return sendResponse(res, {
+        code: 409,
+        success: false,
+        message: `Menu "${menuItem.nama}" sedang habis, tidak bisa ditambahkan ke keranjang`,
       });
     }
 
