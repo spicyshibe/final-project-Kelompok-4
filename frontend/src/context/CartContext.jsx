@@ -7,7 +7,7 @@ const CartContext = createContext(null);
 const EMPTY_CART = { items: [], total_items: 0, total_price: 0 };
 
 export function CartProvider({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [cart, setCart] = useState(EMPTY_CART);
   const [loading, setLoading] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -26,6 +26,7 @@ export function CartProvider({ children }) {
       setCart(EMPTY_CART);
       return;
     }
+    setCart(EMPTY_CART); // bersihin dulu biar gak sempet kekilat nampilin cart user sebelumnya
     try {
       setLoading(true);
       const res = await apiGet('/api/cart');
@@ -37,7 +38,8 @@ export function CartProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+    // user?.id ikut dependency - ganti akun di tab sama, langsung fetch ulang punya user baru
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     fetchCart();

@@ -3,7 +3,7 @@ import { apiGet } from '../utils/api';
 import { useAuth } from './useAuth';
 
 export function useOrderTracking() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +15,7 @@ export function useOrderTracking() {
       return;
     }
     setLoading(true);
+    setOrders([]); // bersihin dulu biar gak sempet kekilat nampilin data user sebelumnya
     try {
       const result = await apiGet('/api/orders/me');
       setOrders(result.data);
@@ -24,7 +25,9 @@ export function useOrderTracking() {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+    // user?.id ikut jadi dependency - kalau ganti akun (logout->login beda user)
+    // di tab yang sama, state lama gak nyangkut, langsung fetch ulang punya user baru
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     fetchOrders();

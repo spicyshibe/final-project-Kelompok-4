@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '../utils/api';
 import { useAuth } from './useAuth';
 
 export function useReservation() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +15,7 @@ export function useReservation() {
       return;
     }
     setLoading(true);
+    setReservations([]); // bersihin dulu biar gak sempet kekilat nampilin data user sebelumnya
     try {
       const result = await apiGet('/api/reservations/me');
       setReservations(result.data);
@@ -24,7 +25,8 @@ export function useReservation() {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+    // user?.id ikut dependency - ganti akun di tab sama, langsung fetch ulang punya user baru
+  }, [isAuthenticated, user?.id]);
 
   const submitReservation = useCallback(
     async ({ nama_tamu, kontak, tanggal, jam, jumlah_orang }) => {
