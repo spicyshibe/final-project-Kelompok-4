@@ -1,18 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiGet } from '../utils/api';
-
-// TODO: ganti hardcoded user_id begitu modul Auth (Amal) selesai
-const CURRENT_USER_ID = 1;
+import { useAuth } from './useAuth';
 
 export function useOrderTracking() {
+  const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchOrders = useCallback(async () => {
+    if (!isAuthenticated) {
+      setOrders([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
-      const result = await apiGet(`/api/orders/me?user_id=${CURRENT_USER_ID}`);
+      const result = await apiGet('/api/orders/me');
       setOrders(result.data);
       setError(null);
     } catch (err) {
@@ -20,7 +24,7 @@ export function useOrderTracking() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     fetchOrders();

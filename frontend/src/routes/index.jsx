@@ -24,16 +24,30 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/menu" element={<MenuCatalog />} />
       <Route path="/menu/:id" element={<MenuCatalog />} />
-      <Route path="/cart" element={<CartPage />} />
       <Route path="/reservasi" element={<Reservation />} />
-      <Route path="/pesanan" element={<OrderTracking />} />
 
-      {/* Authenticated User Routes (Pelanggan / Admin) */}
+      {/* Authenticated User Routes (Pelanggan / Admin) - butuh akun karena datanya melekat ke user */}
       <Route
         path="/profile"
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pesanan"
+        element={
+          <ProtectedRoute>
+            <OrderTracking />
           </ProtectedRoute>
         }
       />

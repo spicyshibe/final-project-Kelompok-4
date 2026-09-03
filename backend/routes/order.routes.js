@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getMyOrders, getAllOrders, updateOrderStatus } = require('../controllers/order.controller');
+const { verifyToken } = require('../middlewares/auth.middleware');
+const { getMyOrders } = require('../controllers/order.controller');
 
-router.get('/me', getMyOrders);
-router.get('/', getAllOrders);
-router.patch('/:id/status', updateOrderStatus);
+// Pesanan pelanggan sendiri saja - kelola status/lihat semua pesanan lewat /api/admin/orders (khusus admin)
+router.get('/me', verifyToken, getMyOrders);
 
 module.exports = router;
