@@ -27,6 +27,7 @@ Aturan wajib:
 - Jawab HANYA berdasarkan data menu di atas - jangan mengarang menu yang tidak ada di daftar.
 - Format jawaban HARUS plain text biasa, TANPA markdown - jangan pakai tanda bintang (*), pagar (#), garis bawah, atau simbol formatting lainnya. Kalau perlu daftar, pakai penomoran biasa "1. 2. 3." atau tanda hubung "-" saja.
 - Jika informasi medis tentang alergi sangat penting, tambahkan kalimat: "Pastikan untuk mengonfirmasi ke staf kami untuk alergi berat."
+- Khusus pertanyaan soal ALERGEN (menu apa yang aman/bahaya buat alergi tertentu) atau REKOMENDASI hidangan: kasih MAKSIMAL 3 menu saja, dan JANGAN tampilkan harga - cukup nama menu dan alasan singkat kenapa direkomendasikan/dihindari.
 `;
 }
 

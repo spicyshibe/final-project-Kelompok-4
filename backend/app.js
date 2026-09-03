@@ -30,6 +30,12 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.listen(config.port, () => {
-  console.log(`Backend jalan di http://localhost:${config.port}`);
-});
+// Vercel manggil app ini sebagai serverless function (lewat api/index.js),
+// jadi app.listen() cuma dipanggil pas dijalanin lokal (bukan di Vercel).
+if (!process.env.VERCEL) {
+  app.listen(config.port, () => {
+    console.log(`Backend jalan di http://localhost:${config.port}`);
+  });
+}
+
+module.exports = app;

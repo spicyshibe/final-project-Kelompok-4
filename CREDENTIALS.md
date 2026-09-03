@@ -2,10 +2,13 @@
 
 Akun buat testing di `localhost:5173`. **Cuma buat dev lokal** — jangan dipake di deploy produksi, ganti semua password sebelum demo/submit kalau perlu.
 
+Akun ini otomatis ke-seed ulang tiap DB fresh (termasuk tiap cold start di Vercel) — gak perlu register manual buat demo.
+
 ## Admin
 
 | Email | Password |
 |---|---|
+| `admin@restonusantara.com` | `admin123` |
 | `admin@resto.com` | `admin123` |
 
 Login lewat `/login` → otomatis kebuka akses `/admin/dashboard` (kelola menu, reservasi, pesanan, user).
@@ -14,6 +17,7 @@ Login lewat `/login` → otomatis kebuka akses `/admin/dashboard` (kelola menu, 
 
 | Email | Password |
 |---|---|
+| `pelanggan@restonusantara.com` | `pelanggan123` |
 | `pelanggan@resto.com` | `pelanggan123` |
 
 Login lewat `/login` → akses fitur pelanggan (menu, cart, reservasi, pesanan, review, chat AI).
@@ -32,4 +36,4 @@ Login lewat `/login` → akses fitur pelanggan (menu, cart, reservasi, pesanan, 
 
 ## Catatan
 
-- User seed bawaan (`admin@restonusantara.com`, `pelanggan@restonusantara.com`) **gak bisa login** — passwordnya cuma teks placeholder (`hashed_pass_admin`/`hashed_pass_demo`), bukan hash bcrypt asli. Abaikan 2 akun itu.
+- `admin@resto.com`/`pelanggan@resto.com` dibikin manual pas testing sesi ini, tersimpan di DB lokal — kalau DB di-reset (misal fresh clone atau cold start Vercel), cuma 2 akun `@restonusantara.com` di atas yang otomatis ada (dari seeder).

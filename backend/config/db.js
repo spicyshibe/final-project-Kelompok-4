@@ -1,7 +1,10 @@
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
-const dbPath = process.env.DB_PATH || path.join(__dirname, '..', 'restaurant.sqlite');
+// Filesystem Vercel read-only kecuali /tmp - db ke-reset tiap cold start di sana (disepakati acceptable)
+const dbPath =
+  process.env.DB_PATH || (process.env.VERCEL ? '/tmp/restaurant.sqlite' : path.join(__dirname, '..', 'restaurant.sqlite'));
 const db = new DatabaseSync(dbPath);
 
 // Enable foreign keys
@@ -120,8 +123,8 @@ function seedData() {
       INSERT INTO users (id, nama, email, password, role)
       VALUES (?, ?, ?, ?, ?)
     `);
-    insertUser.run(1, 'Pelanggan Demo', 'pelanggan@restonusantara.com', 'hashed_pass_demo', 'pelanggan');
-    insertUser.run(2, 'Admin Resto', 'admin@restonusantara.com', 'hashed_pass_admin', 'admin');
+    insertUser.run(1, 'Pelanggan Demo', 'pelanggan@restonusantara.com', bcrypt.hashSync('pelanggan123', 10), 'pelanggan');
+    insertUser.run(2, 'Admin Resto', 'admin@restonusantara.com', bcrypt.hashSync('admin123', 10), 'admin');
   }
 
   const countAllergens = db.prepare('SELECT COUNT(*) as count FROM allergens').get();
