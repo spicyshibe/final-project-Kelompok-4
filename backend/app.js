@@ -14,7 +14,21 @@ const orderRoutes = require('./routes/order.routes');
 
 const app = express();
 
-app.use(cors({ origin: config.frontendUrl }));
+// Selain FRONTEND_URL (alias stabil), izinin juga semua URL deployment
+// Vercel buat project frontend ini (tiap `vercel deploy` bikin domain baru,
+// misal frontend-xxxxx-<team>.vercel.app), biar CORS gak jebol tiap deploy baru.
+const vercelPreviewPattern = /^https:\/\/frontend-[a-z0-9]+-shahky-yandhana-putras-projects\.vercel\.app$/;
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || origin === config.frontendUrl || vercelPreviewPattern.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Origin tidak diizinkan oleh CORS'));
+    },
+  })
+);
 app.use(express.json());
 
 // Routes
