@@ -184,7 +184,7 @@ export default function MenuManagement() {
 
         <button
           onClick={openAddModal}
-          className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl shadow-md shadow-orange-500/20 transition flex items-center gap-2"
+          className="px-4 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold tracking-wide text-xs rounded-xl shadow-md shadow-orange-500/25 transition flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
           Tambah Menu Baru
@@ -222,9 +222,9 @@ export default function MenuManagement() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg capitalize transition ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg capitalize transition ${
                 selectedCategory === cat
-                  ? 'bg-amber-600 text-white shadow-sm'
+                  ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-sm'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
