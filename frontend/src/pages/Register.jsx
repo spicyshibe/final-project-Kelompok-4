@@ -150,7 +150,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 py-2.5 px-4 text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-md shadow-orange-500/20 transition flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full mt-2 py-2.5 px-4 text-sm font-bold tracking-wide rounded-xl text-white bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 shadow-md shadow-orange-500/25 transition flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>

@@ -110,7 +110,11 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 py-2.5 px-4 text-sm font-semibold rounded-xl text-white shadow-md transition flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 shadow-amber-600/20 disabled:opacity-60"
+              className={`w-full mt-2 py-2.5 px-4 text-sm font-bold tracking-wide rounded-xl text-white shadow-md transition flex items-center justify-center gap-2 ${
+                activeTab === 'admin'
+                  ? 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 shadow-purple-700/25'
+                  : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 shadow-orange-500/25'
+              } disabled:opacity-60`}
             >
               {isSubmitting ? (
                 <>
