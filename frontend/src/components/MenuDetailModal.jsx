@@ -213,7 +213,7 @@ function MenuDetailModal({ item, onClose, onAddToCart }) {
                     ? 'bg-gray-300 cursor-not-allowed shadow-none'
                     : added
                     ? 'bg-emerald-600 shadow-emerald-500/20'
-                    : 'bg-orange-600 hover:bg-orange-700 active:scale-98 shadow-orange-500/25'
+                    : 'bg-blue-600 hover:bg-blue-700 active:scale-98 shadow-blue-500/25'
                 }`}
               >
                 {habis ? (

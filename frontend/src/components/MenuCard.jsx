@@ -144,7 +144,7 @@ function MenuCard({ item, onSelect, onAddToCart }) {
               className={`flex items-center gap-1 px-3 py-2 rounded-xl text-white text-xs font-semibold shadow-sm transition-all ${
                 habis
                   ? 'bg-gray-300 cursor-not-allowed shadow-none'
-                  : 'bg-orange-600 hover:bg-orange-700 active:scale-95 shadow-orange-500/20'
+                  : 'bg-blue-600 hover:bg-blue-700 active:scale-95 shadow-blue-500/20'
               }`}
             >
               <Plus className="w-3.5 h-3.5" />
