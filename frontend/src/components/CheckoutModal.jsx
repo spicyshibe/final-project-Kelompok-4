@@ -181,7 +181,7 @@ function CheckoutModal({ cart, onClose, onConfirm }) {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 active:scale-98 disabled:opacity-50 text-white font-bold text-sm shadow-lg shadow-orange-500/25 transition flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-98 disabled:opacity-50 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2"
           >
             {submitting ? (
               <>
