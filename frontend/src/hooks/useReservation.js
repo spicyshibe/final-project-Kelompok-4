@@ -1,18 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiGet, apiPost } from '../utils/api';
-
-// TODO: ganti hardcoded user_id begitu modul Auth (Amal) selesai
-const CURRENT_USER_ID = 1;
+import { useAuth } from './useAuth';
 
 export function useReservation() {
+  const { isAuthenticated, user } = useAuth();
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchReservations = useCallback(async () => {
+    if (!isAuthenticated) {
+      setReservations([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
+    setReservations([]); // bersihin dulu biar gak sempet kekilat nampilin data user sebelumnya
     try {
-      const result = await apiGet(`/api/reservations/me?user_id=${CURRENT_USER_ID}`);
+      const result = await apiGet('/api/reservations/me');
       setReservations(result.data);
       setError(null);
     } catch (err) {
@@ -20,12 +25,13 @@ export function useReservation() {
     } finally {
       setLoading(false);
     }
-  }, []);
+    // user?.id ikut dependency - ganti akun di tab sama, langsung fetch ulang punya user baru
+  }, [isAuthenticated, user?.id]);
 
   const submitReservation = useCallback(
     async ({ nama_tamu, kontak, tanggal, jam, jumlah_orang }) => {
+      // Server ambil identitas dari token JWT kalau login - user_id gak dikirim dari client
       const result = await apiPost('/api/reservations', {
-        user_id: CURRENT_USER_ID,
         nama_tamu,
         kontak,
         tanggal,

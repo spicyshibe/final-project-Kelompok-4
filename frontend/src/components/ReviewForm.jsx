@@ -1,18 +1,31 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export default function ReviewForm({ onSubmit, isLoading }) {
+  const { user, isAuthenticated } = useAuth();
   const [rating, setRating] = useState(5);
   const [komentar, setKomentar] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Gunakan user_id statis untuk mock auth sementara
-    const success = await onSubmit({ user_id: 1, rating, komentar });
+    const success = await onSubmit({ user_id: user.id, rating, komentar });
     if (success) {
       setRating(5);
       setKomentar('');
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-6 text-sm text-gray-600 text-center">
+        <Link to="/login" className="font-semibold text-amber-600 hover:text-amber-700">
+          Masuk
+        </Link>{' '}
+        dulu buat kasih ulasan.
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mt-6">

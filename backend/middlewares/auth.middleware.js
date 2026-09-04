@@ -49,6 +49,27 @@ function verifyToken(req, res, next) {
 }
 
 /**
+ * Middleware buat route yang boleh diakses tamu (tanpa login) TAPI kalau ada
+ * token valid, isi req.user - biar server percaya identitas dari token,
+ * bukan dari body/query yang bisa dipalsuin.
+ */
+function optionalAuth(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(authHeader.split(' ')[1], config.jwtSecret);
+    const user = UserModel.findById(decoded.id);
+    if (user) req.user = user;
+  } catch (error) {
+    // token gak valid, tetap lanjut sebagai tamu
+  }
+  next();
+}
+
+/**
  * Middleware untuk memastikan user memiliki role 'admin'
  */
 function requireAdmin(req, res, next) {
@@ -78,6 +99,7 @@ function requirePelanggan(req, res, next) {
 
 module.exports = {
   verifyToken,
+  optionalAuth,
   requireAdmin,
   requirePelanggan
 };

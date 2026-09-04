@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UtensilsCrossed, Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { UtensilsCrossed, Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState('pelanggan'); // 'pelanggan' | 'admin'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const from = location.state?.from?.pathname || (activeTab === 'admin' ? '/admin/dashboard' : '/');
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,35 +30,15 @@ export default function Login() {
       const response = await login(email, password);
       const userRole = response?.data?.user?.role;
 
-      if (activeTab === 'admin' && userRole !== 'admin') {
-        setError('Akun ini bukan akun Administrator/Staff.');
-        setIsSubmitting(false);
-        return;
-      }
-
       if (userRole === 'admin') {
         navigate('/admin/dashboard', { replace: true });
       } else {
-        navigate(from === '/admin/dashboard' ? '/' : from, { replace: true });
+        navigate(from, { replace: true });
       }
     } catch (err) {
       setError(err.message || 'Login gagal. Periksa email dan password Anda.');
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Helper quick fill for testing / demo
-  const fillDemoAccount = (role) => {
-    setError('');
-    if (role === 'admin') {
-      setActiveTab('admin');
-      setEmail('admin@restoran.com');
-      setPassword('admin123');
-    } else {
-      setActiveTab('pelanggan');
-      setEmail('pelanggan@restoran.com');
-      setPassword('pelanggan123');
     }
   };
 
@@ -73,38 +52,6 @@ export default function Login() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Selamat Datang Kembali</h2>
           <p className="text-sm text-gray-500 mt-1">Masuk ke akun RestoHub Anda</p>
-        </div>
-
-        {/* Tab Role Switcher (FR-1.1 & FR-1.2) */}
-        <div className="bg-gray-100/80 p-1 rounded-xl flex mb-6 border border-gray-200/60">
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('pelanggan');
-              setError('');
-            }}
-            className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${
-              activeTab === 'pelanggan'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-800'
-            }`}
-          >
-            👤 Pelanggan
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('admin');
-              setError('');
-            }}
-            className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${
-              activeTab === 'admin'
-                ? 'bg-white text-purple-800 shadow-sm'
-                : 'text-gray-500 hover:text-gray-800'
-            }`}
-          >
-            🛡️ Staff / Admin
-          </button>
         </div>
 
         {/* Form Card */}
@@ -176,38 +123,12 @@ export default function Login() {
                 </>
               ) : (
                 <>
-                  <span>Masuk {activeTab === 'admin' ? 'Sebagai Admin' : ''}</span>
+                  <span>Masuk</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
-
-          {/* Quick Demo Testing Box */}
-          <div className="mt-6 pt-5 border-t border-gray-100">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 text-center mb-3">
-              ⚡ Akun Demo Pengujian Cepat
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('pelanggan')}
-                className="px-2.5 py-2 text-xs font-medium bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100/80 transition text-left border border-amber-200/60"
-              >
-                <div className="font-semibold text-amber-900">👤 Pelanggan Demo</div>
-                <div className="text-[10px] text-amber-700/80">pelanggan@restoran.com</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('admin')}
-                className="px-2.5 py-2 text-xs font-medium bg-purple-50 text-purple-800 rounded-lg hover:bg-purple-100/80 transition text-left border border-purple-200/60"
-              >
-                <div className="font-semibold text-purple-900">🛡️ Admin Demo</div>
-                <div className="text-[10px] text-purple-700/80">admin@restoran.com</div>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer Link */}

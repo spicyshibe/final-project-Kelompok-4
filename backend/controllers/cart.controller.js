@@ -2,19 +2,12 @@ const db = require('../config/db');
 const sendResponse = require('../utils/response');
 
 /**
- * Helper to get active user ID from request
- * (mendukung session/header atau fallback ke demo user ID 1)
+ * Ambil user ID dari token JWT yang udah diverifikasi (req.user, dari middleware verifyToken).
+ * JANGAN pernah percaya user_id dari client (query/header) - itu bisa dipalsuin buat
+ * ngintip/ubah data user lain.
  */
 function getUserId(req) {
-  const headerId = req.headers['x-user-id'];
-  if (headerId && !isNaN(headerId)) {
-    return parseInt(headerId, 10);
-  }
-  const queryId = req.query.user_id || req.query.userId;
-  if (queryId && !isNaN(queryId)) {
-    return parseInt(queryId, 10);
-  }
-  return 1;
+  return req.user.id;
 }
 
 /**
@@ -136,12 +129,20 @@ function addToCart(req, res) {
     }
 
     // Cek menu ada di DB
-    const menuItem = db.prepare('SELECT id, nama, harga FROM menu_items WHERE id = ?').get(menu_item_id);
+    const menuItem = db.prepare('SELECT id, nama, harga, status_tersedia FROM menu_items WHERE id = ?').get(menu_item_id);
     if (!menuItem) {
       return sendResponse(res, {
         code: 404,
         success: false,
         message: `Menu dengan ID ${menu_item_id} tidak ditemukan`,
+      });
+    }
+
+    if (!menuItem.status_tersedia) {
+      return sendResponse(res, {
+        code: 409,
+        success: false,
+        message: `Menu "${menuItem.nama}" sedang habis, tidak bisa ditambahkan ke keranjang`,
       });
     }
 
@@ -407,8 +408,16 @@ function getOrderById(req, res) {
       });
     }
 
+    if (order.user_id !== getUserId(req)) {
+      return sendResponse(res, {
+        code: 403,
+        success: false,
+        message: 'Kamu tidak punya akses ke pesanan ini',
+      });
+    }
+
     const items = db.prepare(`
-      SELECT 
+      SELECT
         oi.id as order_item_id,
         oi.menu_item_id,
         oi.jumlah,

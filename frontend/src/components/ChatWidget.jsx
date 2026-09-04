@@ -80,6 +80,11 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Disclaimer alergi (FR-3.5) */}
+          <div className="px-3 py-2 bg-amber-50 border-t border-amber-200 text-[11px] text-amber-800 leading-snug">
+            ⚠️ Info AI cuma panduan awal. Untuk alergi berat, tetap konfirmasi ke staff kami sebelum memesan.
+          </div>
+
           {/* Input Area */}
           <form onSubmit={handleSubmit} className="p-3 bg-white border-t border-gray-200 rounded-b-lg flex gap-2">
             <input

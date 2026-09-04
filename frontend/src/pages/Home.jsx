@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import MenuCard from '../components/MenuCard';
 import MenuDetailModal from '../components/MenuDetailModal';
-import { useHealthCheck } from '../hooks/useHealthCheck';
-import HealthBadge from '../components/HealthBadge';
 import { apiGet } from '../utils/api';
 import { useCart } from '../context/CartContext';
 import {
@@ -15,11 +13,9 @@ import {
   ShoppingBag,
   Sparkles,
   Flame,
-  CheckCircle2,
 } from 'lucide-react';
 
 function Home() {
-  const { status, data: healthData, checkHealth } = useHealthCheck();
   const { addToCart } = useCart();
   const [featuredMenu, setFeaturedMenu] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -56,11 +52,6 @@ function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Col - Headline */}
             <div className="lg:col-span-7 text-center lg:text-left space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-amber-100 shadow-sm">
-                <Sparkles className="w-4 h-4 text-yellow-300 animate-spin-slow" />
-                <span>Restoran Digital Terintegrasi AI</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
                 Nikmati Cita Rasa Nusantara, Bebas Cemas Alergen.
               </h1>
@@ -235,35 +226,6 @@ function Home() {
             <span>Jelajahi Seluruh Katalog Menu</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
-      </section>
-
-      {/* PAW System Health & Developer Info */}
-      <section className="py-8 bg-gray-100 border-t border-gray-200/80">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-left">
-              <div className="flex items-center gap-2 mb-1">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                  PAW Kelompok 4 — Status Backend & Database
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">
-                Fitur Modul: <strong className="text-gray-700">Katalog Menu & Keranjang (Gandhi - 20240140045)</strong>
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <HealthBadge status={status} />
-              <button
-                onClick={checkHealth}
-                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition"
-              >
-                Cek Ulang
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 

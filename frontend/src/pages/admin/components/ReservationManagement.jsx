@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet, apiDelete } from '../../../utils/api';
+import { apiGet, apiPatch, apiDelete } from '../../../utils/api';
 import { Calendar, Clock, Users, Phone, Check, X, Trash2, Search, Filter, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function ReservationManagement() {
@@ -35,25 +35,11 @@ export default function ReservationManagement() {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/admin/reservations/${id}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setStatusMessage({ type: 'success', text: data.message });
-        fetchReservations();
-      } else {
-        throw new Error(data.message || 'Gagal mengubah status.');
-      }
+      const res = await apiPatch(`/api/admin/reservations/${id}/status`, { status: newStatus });
+      setStatusMessage({ type: 'success', text: res.message });
+      fetchReservations();
     } catch (err) {
-      setStatusMessage({ type: 'error', text: err.message });
+      setStatusMessage({ type: 'error', text: err.message || 'Gagal mengubah status.' });
     }
   };
 

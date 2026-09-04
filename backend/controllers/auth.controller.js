@@ -29,7 +29,7 @@ const AuthController = {
    */
   async register(req, res) {
     try {
-      const { nama, email, password, role } = req.body;
+      const { nama, email, password } = req.body;
 
       // 1. Validasi input
       if (!nama || !email || !password) {
@@ -78,15 +78,13 @@ const AuthController = {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Default role adalah 'pelanggan'
-      const assignedRole = role === 'admin' ? 'admin' : 'pelanggan';
-
-      // 4. Simpan ke database
+      // Register publik selalu jadi 'pelanggan' - role admin cuma bisa di-set
+      // manual (seed/DB) atau lewat User Management di dashboard admin.
       const newUser = UserModel.create({
         nama: nama.trim(),
         email: email.trim().toLowerCase(),
         password: hashedPassword,
-        role: assignedRole
+        role: 'pelanggan'
       });
 
       // 5. Generate token JWT

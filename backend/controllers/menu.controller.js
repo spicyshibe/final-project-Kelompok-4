@@ -27,8 +27,8 @@ function enrichMenuItems(menuItems) {
     return {
       ...item,
       allergens: allergens || [],
-      rating_avg: reviewStats?.avg_rating ? parseFloat(reviewStats.avg_rating.toFixed(1)) : 4.8,
-      review_count: reviewStats?.review_count || 12,
+      rating_avg: reviewStats?.avg_rating ? parseFloat(reviewStats.avg_rating.toFixed(1)) : 0,
+      review_count: reviewStats?.review_count || 0,
     };
   });
 }

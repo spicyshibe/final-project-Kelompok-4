@@ -4,9 +4,9 @@ function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 pt-12 pb-8 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Brand Col */}
-          <div className="md:col-span-1">
+          <div>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white">
                 <Utensils className="w-4 h-4" />
@@ -50,16 +50,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Team / Academic Info */}
-          <div>
-            <h4 className="font-semibold text-white text-sm mb-3">Tim Pengembang (Kelompok 4)</h4>
-            <div className="bg-gray-800/80 p-3 rounded-xl border border-gray-700/60 text-xs space-y-1.5">
-              <p className="text-orange-400 font-semibold">Tugas Akhir PAW (2026)</p>
-              <p className="text-gray-300 font-medium">Gandhi Muhammad Bagas Saputra</p>
-              <p className="text-gray-400">NIM: 20240140045 (Katalog Menu & Keranjang)</p>
-              <p className="text-gray-400">Bersama Rekan Kelompok 4</p>
-            </div>
-          </div>
         </div>
 
         <div className="pt-6 border-t border-gray-800/80 text-center text-xs text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-2">

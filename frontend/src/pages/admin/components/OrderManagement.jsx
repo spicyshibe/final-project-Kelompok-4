@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet, apiDelete } from '../../../utils/api';
+import { apiGet, apiPatch, apiDelete } from '../../../utils/api';
 import { ShoppingBag, ChevronRight, CheckCircle2, Clock, Truck, ChefHat, XCircle, Search, Trash2, AlertCircle, X } from 'lucide-react';
 
 export default function OrderManagement() {
@@ -32,25 +32,11 @@ export default function OrderManagement() {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/admin/orders/${id}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setStatusMessage({ type: 'success', text: data.message });
-        fetchOrders();
-      } else {
-        throw new Error(data.message || 'Gagal mengubah status pesanan.');
-      }
+      const res = await apiPatch(`/api/admin/orders/${id}/status`, { status: newStatus });
+      setStatusMessage({ type: 'success', text: res.message });
+      fetchOrders();
     } catch (err) {
-      setStatusMessage({ type: 'error', text: err.message });
+      setStatusMessage({ type: 'error', text: err.message || 'Gagal mengubah status pesanan.' });
     }
   };
 

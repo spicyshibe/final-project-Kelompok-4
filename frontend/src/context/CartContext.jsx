@@ -1,14 +1,14 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { apiGet, apiPost, apiPut, apiDelete } from '../utils/api';
+import { useAuth } from '../hooks/useAuth';
 
 const CartContext = createContext(null);
 
+const EMPTY_CART = { items: [], total_items: 0, total_price: 0 };
+
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState({
-    items: [],
-    total_items: 0,
-    total_price: 0,
-  });
+  const { isAuthenticated, user } = useAuth();
+  const [cart, setCart] = useState(EMPTY_CART);
   const [loading, setLoading] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -20,8 +20,13 @@ export function CartProvider({ children }) {
     }, 3000);
   };
 
-  // Fetch cart data from backend
+  // Fetch cart data from backend - cart cuma ada buat pengguna yang login
   const fetchCart = useCallback(async () => {
+    if (!isAuthenticated) {
+      setCart(EMPTY_CART);
+      return;
+    }
+    setCart(EMPTY_CART); // bersihin dulu biar gak sempet kekilat nampilin cart user sebelumnya
     try {
       setLoading(true);
       const res = await apiGet('/api/cart');
@@ -33,7 +38,8 @@ export function CartProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+    // user?.id ikut dependency - ganti akun di tab sama, langsung fetch ulang punya user baru
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     fetchCart();

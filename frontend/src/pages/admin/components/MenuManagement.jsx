@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet, apiPost, apiPut, apiDelete } from '../../../utils/api';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '../../../utils/api';
 import { Plus, Edit2, Trash2, Search, Utensils, CheckCircle2, XCircle, AlertCircle, X, Sparkles } from 'lucide-react';
 
 export default function MenuManagement() {
@@ -129,21 +129,10 @@ export default function MenuManagement() {
 
   const handleToggleAvailability = async (id) => {
     try {
-      const res = await apiPut(`/api/admin/menu/${id}/toggle`, {});
-      // or patch
+      await apiPatch(`/api/admin/menu/${id}/toggle`, {});
       fetchMenus();
-    } catch (e) {
-      // Fallback with custom request if needed
-      try {
-        const token = localStorage.getItem('token');
-        await fetch(`http://localhost:3000/api/admin/menu/${id}/toggle`, {
-          method: 'PATCH',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        fetchMenus();
-      } catch (err) {
-        console.error(err);
-      }
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Gagal mengubah status ketersediaan menu.' });
     }
   };
 

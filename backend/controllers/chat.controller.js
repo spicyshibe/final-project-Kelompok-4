@@ -1,26 +1,35 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const config = require('../config/env');
-const { sendResponse } = require('../utils/response');
+const sendResponse = require('../utils/response');
+const MenuModel = require('../models/menu.model');
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(config.geminiApiKey || 'mock-key');
 
-// Mock Menu Data (Temporary until database is ready)
-const mockMenuContext = `
-Data Menu Restoran (Gunakan informasi ini untuk menjawab pertanyaan pelanggan):
-1. Nasi Goreng Spesial: Rp 35.000 (Nasi goreng dengan telur, ayam, sosis, dan udang. Alergen: Udang, Telur. Kalori: ~550 kcal)
-2. Mie Goreng Seafood: Rp 40.000 (Mie goreng dengan cumi dan udang. Alergen: Seafood, Telur, Gluten. Kalori: ~600 kcal)
-3. Sate Ayam Madura: Rp 30.000 (10 tusuk sate ayam dengan bumbu kacang. Alergen: Kacang. Kalori: ~450 kcal)
-4. Salad Buah: Rp 25.000 (Buah segar dengan mayones dan keju. Alergen: Susu/Dairy. Kalori: ~200 kcal)
-5. Es Teh Manis: Rp 8.000 (Kalori: ~120 kcal)
+// FR-3.3: konteks menu diambil dari database asli, bukan data hardcode
+function buildMenuContext() {
+  const menuItems = MenuModel.findAll({ isAvailable: 1 });
 
-Penting:
-- Anda adalah asisten virtual restoran.
-- Jawab dengan ramah, profesional, dan membantu.
-- Jika pengguna bertanya tentang menu, kalori, atau alergen, jawab berdasarkan data di atas.
-- Jika pengguna bertanya di luar topik restoran, arahkan kembali ke konteks restoran.
-- Jika informasi medis tentang alergi sangat penting, tambahkan disclaimer: "Pastikan untuk mengonfirmasi ke staf kami untuk alergi berat."
+  const daftarMenu = menuItems
+    .map((m, i) => {
+      const alergen = m.allergens.length ? m.allergens.join(', ') : 'Tidak ada alergen tercatat';
+      return `${i + 1}. ${m.nama}: Rp ${m.harga.toLocaleString('id-ID')} (${m.deskripsi}. Kategori: ${m.kategori}. Alergen: ${alergen}. Kalori: ~${m.kalori} kcal)`;
+    })
+    .join('\n');
+
+  return `
+Data Menu Restoran (Gunakan informasi ini untuk menjawab pertanyaan pelanggan):
+${daftarMenu || 'Belum ada menu tersedia di database.'}
+
+Aturan wajib:
+- Anda adalah asisten virtual restoran ini SAJA. Topik yang boleh dijawab: menu, harga, kalori, alergen, bahan, rekomendasi hidangan, reservasi, dan pesanan di restoran ini.
+- Kalau pengguna nanya di luar topik itu (coding, politik, hal umum, curhat, dll), TOLAK dengan sopan dan arahkan balik ke topik restoran - jangan dijawab sama sekali walau kamu tahu jawabannya.
+- Jawab HANYA berdasarkan data menu di atas - jangan mengarang menu yang tidak ada di daftar.
+- Format jawaban HARUS plain text biasa, TANPA markdown - jangan pakai tanda bintang (*), pagar (#), garis bawah, atau simbol formatting lainnya. Kalau perlu daftar, pakai penomoran biasa "1. 2. 3." atau tanda hubung "-" saja.
+- Jika informasi medis tentang alergi sangat penting, tambahkan kalimat: "Pastikan untuk mengonfirmasi ke staf kami untuk alergi berat."
+- Khusus pertanyaan soal ALERGEN (menu apa yang aman/bahaya buat alergi tertentu) atau REKOMENDASI hidangan: kasih MAKSIMAL 3 menu saja, dan JANGAN tampilkan harga - cukup nama menu dan alasan singkat kenapa direkomendasikan/dihindari.
 `;
+}
 
 const handleChat = async (req, res) => {
   try {
@@ -42,8 +51,7 @@ const handleChat = async (req, res) => {
       });
     }
 
-    // Menggunakan model gemini-1.5-flash untuk respon cepat
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
 
     // Menyusun history chat jika ada (untuk konteks percakapan)
     let chatHistory = [];
@@ -51,7 +59,7 @@ const handleChat = async (req, res) => {
     // Inisialisasi system prompt sebagai bagian dari history
     chatHistory.push({
       role: 'user',
-      parts: [{ text: `System Prompt: ${mockMenuContext}` }]
+      parts: [{ text: `System Prompt: ${buildMenuContext()}` }]
     });
     chatHistory.push({
       role: 'model',
@@ -72,7 +80,9 @@ const handleChat = async (req, res) => {
     const chat = model.startChat({
       history: chatHistory,
       generationConfig: {
-        maxOutputTokens: 1000,
+        // ponytail: gemini-3.6-flash motong sebagian token buat "thinking" internal,
+        // budget dinaikin biar jawaban gak kepotong - naikin lagi kalau masih terjadi
+        maxOutputTokens: 3000,
         temperature: 0.7,
       },
     });

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { verifyToken } = require('../middlewares/auth.middleware');
 const {
   getCart,
   addToCart,
@@ -9,6 +10,9 @@ const {
   checkout,
   getOrderById,
 } = require('../controllers/cart.controller');
+
+// Cart selalu punya pemilik - wajib login
+router.use(verifyToken);
 
 // Cart routes
 router.get('/', getCart);
