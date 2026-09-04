@@ -81,10 +81,10 @@ export default function AdminDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 min-w-[130px] sm:min-w-[150px] py-3 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 relative ${
+                className={`flex-1 min-w-[130px] sm:min-w-[150px] py-3 px-3 rounded-xl text-xs font-bold tracking-wide transition flex items-center justify-center gap-2 relative ${
                   isActive
-                    ? 'bg-purple-900 text-white shadow-md shadow-purple-900/20'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-gradient-to-r from-purple-900 to-indigo-900 text-white shadow-md shadow-purple-900/25'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/80'
                 }`}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" />
